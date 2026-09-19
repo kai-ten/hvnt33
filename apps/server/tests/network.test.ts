@@ -130,7 +130,7 @@ test('routes that log in: credentials stay on this machine, a local relay adds t
     assert.ok(!everything.includes('relayPort') || !JSON.stringify([saved, await h.a.api('/api/investigations')]).includes('relayPort'));
     const secrets = path.join(h.config.network.secretsDir, 'routes.json');
     assert.ok(fs.readFileSync(secrets, 'utf8').includes('correct horse'));
-    assert.equal(fs.statSync(secrets).mode & 0o077, 0, 'readable by this user only');
+    if (process.platform !== 'win32') assert.equal(fs.statSync(secrets).mode & 0o077, 0, 'readable by this user only');
 
     const { route } = await h.a.api(`/api/investigations/${inv.id}/route`);
     assert.match(route, /^socks5:\/\/127\.0\.0\.1:\d+$/, 'clients use the local relay, without credentials');
@@ -240,7 +240,7 @@ test('built-in Tor: started on demand with progress, found on its own port, stop
     await tor.stop();
     assert.equal(tor.get().state, 'off');
     assert.equal(await probe.detectTor([port]), null, 'stopped');
-    assert.equal(fs.statSync(dataDir).mode & 0o077, 0, 'its data folder is private');
+    if (process.platform !== 'win32') assert.equal(fs.statSync(dataDir).mode & 0o077, 0, 'its data folder is private');
 
     process.env.FAKE_TOR_FAIL = '1';
     const broken = new BuiltinTor(fake, dataDir, 20_000);

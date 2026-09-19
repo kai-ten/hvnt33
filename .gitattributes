@@ -1,0 +1,4 @@
+* text=auto eol=lf
+
+# Timestamp response fixtures are binary DER and must never be transformed.
+*.tsr binary

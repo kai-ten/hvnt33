@@ -52,7 +52,10 @@ export class BuiltinTor {
     this.ready = new Promise<number>((resolve, reject) => {
       // On Linux, tor loads the libraries it ships with (libevent, OpenSSL) from its own folder.
       const env = process.platform === 'linux' ? { ...process.env, LD_LIBRARY_PATH: [dir, process.env.LD_LIBRARY_PATH].filter(Boolean).join(':') } : process.env;
-      const child = spawn(this.binary, args, { stdio: ['ignore', 'pipe', 'pipe'], env, windowsHide: true });
+      // Tests use a JavaScript Tor stand-in. Windows does not execute shebang
+      // scripts directly, so run script fixtures through this Node process.
+      const script = /\.(?:[cm]?js|ts)$/i.test(this.binary);
+      const child = spawn(script ? process.execPath : this.binary, script ? [this.binary, ...args] : args, { stdio: ['ignore', 'pipe', 'pipe'], env, windowsHide: true });
       this.child = child;
       const timer = setTimeout(() => fail('Tor did not finish starting within two minutes (is the internet reachable?)'), this.startTimeoutMs);
       const fail = (error: string) => {
