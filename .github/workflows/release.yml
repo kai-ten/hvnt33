@@ -40,17 +40,39 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run setup
+      # electron-builder 26.15.3 passes the PKCS#12 password to
+      # set-key-partition-list instead of its generated keychain password.
+      # Import into an unlocked temporary keychain ourselves until that is fixed.
+      - name: Import the Apple signing certificate
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+        run: |
+          if [ -z "$APPLE_CERTIFICATE" ]; then exit 0; fi
+          certificate_path="$RUNNER_TEMP/hvnt33-signing.p12"
+          keychain_path="$RUNNER_TEMP/hvnt33-signing.keychain-db"
+          keychain_password="$(openssl rand -base64 32)"
+          printf '%s' "$APPLE_CERTIFICATE" | base64 -D > "$certificate_path"
+          security create-keychain -p "$keychain_password" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$keychain_password" "$keychain_path"
+          security import "$certificate_path" -k "$keychain_path" -P "$APPLE_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_path"
+          security list-keychains -d user -s "$keychain_path"
+          echo "CSC_KEYCHAIN=$keychain_path" >> "$GITHUB_ENV"
       - name: Build the installer
         shell: bash
         env:
           # Unsigned when the secrets are absent (electron-builder then skips signing).
-          CSC_LINK: ${{ runner.os == 'macOS' && secrets.APPLE_CERTIFICATE || runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE || '' }}
-          CSC_KEY_PASSWORD: ${{ runner.os == 'macOS' && secrets.APPLE_CERTIFICATE_PASSWORD || runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE_PASSWORD || '' }}
+          CSC_LINK: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE || '' }}
+          CSC_KEY_PASSWORD: ${{ runner.os == 'Windows' && secrets.WINDOWS_CERTIFICATE_PASSWORD || '' }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          if [ -z "$CSC_LINK" ]; then export CSC_IDENTITY_AUTO_DISCOVERY=false; fi
+          if [ -z "$CSC_LINK" ] && [ -z "$CSC_KEYCHAIN" ]; then export CSC_IDENTITY_AUTO_DISCOVERY=false; fi
           npm run package
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -61,6 +83,11 @@ jobs:
             apps/desktop/release/*.AppImage
             apps/desktop/release/*.deb
           if-no-files-found: error
+      - name: Remove the temporary Apple signing keychain
+        if: always() && runner.os == 'macOS'
+        shell: bash
+        run: |
+          if [ -n "$CSC_KEYCHAIN" ]; then security delete-keychain "$CSC_KEYCHAIN" || true; fi
 
   draft:
     needs: app
