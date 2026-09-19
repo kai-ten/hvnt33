@@ -70,7 +70,15 @@ async function fetchJava(pins: Pins, platform: string, tmp: string) {
   if (fs.existsSync(path.join(home, 'Contents', 'Home'))) home = path.join(home, 'Contents', 'Home');
   fs.rmSync(dir, { recursive: true, force: true });
   fs.mkdirSync(path.dirname(dir), { recursive: true });
-  fs.renameSync(home, dir);
+  try {
+    fs.renameSync(home, dir);
+  } catch (error) {
+    // Windows CI commonly puts the temporary directory on C: and the checkout
+    // on D:. rename cannot cross volumes, so fall back to a recursive copy.
+    if ((error as NodeJS.ErrnoException).code !== 'EXDEV') throw error;
+    fs.cpSync(home, dir, { recursive: true });
+    fs.rmSync(home, { recursive: true, force: true });
+  }
   fs.writeFileSync(stamp, `${pins.java.release}\n`);
   console.log(`Installed Java ${pins.java.release} for ${platform} (checksum verified).`);
 }
