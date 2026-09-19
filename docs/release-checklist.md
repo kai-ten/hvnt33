@@ -9,8 +9,8 @@ This is the maintainer checklist for making HVNT33 downloadable as signed instal
 - [x] License: AGPL-3.0-only, with no contributor license agreement
 - [x] Cross-platform release workflow exists
 - [x] Runtime downloads and Tor bundles are pinned and verified
-- [ ] Current desktop and website work committed
-- [ ] Fresh public history created (the private history contains `docs/notes`)
+- [x] Current desktop and website release work committed
+- [x] Fresh public history created at `https://github.com/kai-ten/hvnt33` (the private history remains private)
 - [ ] Apple signing secrets installed in GitHub
 - [ ] Windows signing approach chosen
 - [ ] First draft release tested on clean machines
@@ -21,23 +21,24 @@ Do not upload the existing local DMG. It is an ad-hoc development build without 
 
 - [x] AGPL-3.0 choice reviewed with counsel on 2026-09-19; the proprietary cloud will remain separately implemented across a network API boundary.
 - [ ] Complete a trademark/name search for “HVNT33” in every market where it will be sold.
-- [ ] Confirm continued ownership of `hvnt33.com` and the `kai-ten/hvnt33` GitHub repository.
+- [x] Confirm continued ownership of `hvnt33.com` and the `kai-ten/hvnt33` GitHub repository.
 - [ ] Decide whether the first release is the `v0.1.0` prerelease currently configured.
-- [ ] Decide whether the current `apps/web` work is part of the first public repository.
+- [x] Include the current `apps/web` work in the first public repository.
 
 Contributions are made under AGPL-3.0-only. There is no CLA bot or signature branch.
 
 ## 2. Prepare Apple signing and notarization
 
-The Mac currently has two copies of the same Developer ID identity:
+The Mac currently has two Developer ID Application certificates for the same team: one expires in 2027 and one in 2031. `security find-identity -v -p codesigning` currently reports zero usable identities, so do not delete either certificate until the private key is restored and the command reports a valid identity.
 
 ```text
 Developer ID Application: Kai Herrera (BR6J77ATNC)
 ```
 
-- [ ] In Keychain Access, open **My Certificates** and expand both entries.
-- [ ] Compare expiration dates and confirm which entry has the private key.
-- [ ] Export a backup before deleting anything; retain one valid certificate/private-key pair.
+- [ ] In Keychain Access, open **My Certificates** and expand both Developer ID Application entries.
+- [ ] Confirm that the 2031 entry has an indented private-key child. If it does not, import the original password-protected `.p12` or issue a replacement certificate from a CSR created on this Mac.
+- [ ] Run `security find-identity -v -p codesigning` and continue only after it reports the 2031 Developer ID Application identity as valid.
+- [ ] Export a backup before deleting anything. Only after the 2031 identity is usable may the expiring 2027 duplicate be removed.
 - [ ] Export that pair as a password-protected `.p12`.
 - [ ] Create an Apple app-specific password at appleid.apple.com.
 - [ ] Confirm the Apple Team ID (`BR6J77ATNC` is present in the installed certificate).
@@ -49,10 +50,12 @@ base64 -i certificate.p12 | pbcopy
 
 Never commit or paste the certificate, its password, or the Apple password into an issue or chat.
 
+The Developer ID Installer certificate is not used for the current `.dmg` release. Keep it if a signed `.pkg` may be added later; it does not conflict with Developer ID Application signing.
+
 ## 3. Create and configure the public GitHub repository
 
-- [ ] Create an empty public repository at `kai-ten/hvnt33`; do not add a generated README, license, or `.gitignore`.
-- [ ] Enable **Security → Private vulnerability reporting**.
+- [x] Create the public repository at `kai-ten/hvnt33` from a clean one-commit history.
+- [x] Enable **Security → Private vulnerability reporting**, secret scanning, push protection, vulnerability alerts, and Dependabot security updates.
 - [ ] Protect `main` and require the CI checks before merging.
 - [ ] Add these under **Settings → Secrets and variables → Actions**:
 

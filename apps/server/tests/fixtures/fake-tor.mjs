@@ -2,9 +2,7 @@
 // Stands in for tor in offline tests: prints tor's start-up log lines and
 // serves a SOCKS5 port (any login, as tor with IsolateSOCKSAuth). With
 // FAKE_TOR_FAIL=1 it fails the way tor does when it cannot start.
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-const { startSocks } = await import(path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'socks.ts'));
+const { startSocks } = await import(new URL('../socks.ts', import.meta.url));
 if (process.env.FAKE_TOR_FAIL === '1') {
   console.log('Sep 18 12:00:00.000 [err] Reading config failed--see warnings above.');
   process.exit(1);

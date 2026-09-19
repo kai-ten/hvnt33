@@ -51,7 +51,7 @@ The repository and conduct-contact fields are filled. There is no contributor li
 
 - [x] Counsel approved AGPL-3.0 for the public desktop/server code on 2026-09-19; the proprietary cloud remains separately implemented across network APIs.
 - [ ] Name clearance: you own hvnt33.com and the GitHub name; run a trademark search for "hvnt33" where you'll sell.
-- [ ] Follow section D of `docs/releasing.md` to publish a fresh public history.
+- [x] Publish a fresh public history at `github.com/kai-ten/hvnt33`; the original repository and its private history remain private.
 
 ## 5. Sign the desktop app
 
