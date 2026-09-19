@@ -34,5 +34,6 @@ nsis:
   allowToChangeInstallationDirectory: true
 linux:
   target: [AppImage, deb]
+  executableName: hvnt33
   category: Office
   maintainer: hvnt33 contributors
