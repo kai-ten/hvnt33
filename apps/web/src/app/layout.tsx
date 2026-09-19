@@ -6,6 +6,8 @@ import { Reveals } from "@/components/Reveals";
 import { site } from "@/lib/site";
 import "./globals.css";
 
+const themeBootstrap = `document.documentElement.classList.add("js");try{const theme=localStorage.getItem("theme");if(theme==="light"||theme==="dark")document.documentElement.dataset.theme=theme}catch{}`;
+
 // next/font downloads these at build time and serves them from this site;
 // no visitor request ever goes to Google.
 const titling = Castoro_Titling({ weight: "400", subsets: ["latin"], variable: "--font-titling", display: "swap" });
@@ -32,6 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-theme="light" suppressHydrationWarning className={`${titling.variable} ${castoro.variable} ${plex.variable} ${plexMono.variable}`}>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrap }} />
         <link rel="preload" href="/fonts/vu-CastoroTitling-Regular.woff2" as="font" type="font/woff2" crossOrigin="" />
       </head>
       <body>
