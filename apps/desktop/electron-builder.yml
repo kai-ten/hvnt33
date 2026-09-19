@@ -1,0 +1,38 @@
+# One installable app per platform: the Electron shell, plus the server, the
+# built-in database and Tor staged by scripts/package.ts into build/hvnt33.
+appId: dev.hvnt33.desktop
+productName: HVNT33
+copyright: Copyright © 2026 hvnt33 contributors. Licensed under the GNU AGPL v3.
+directories:
+  output: release
+  buildResources: build-resources
+files:
+  - dist/**
+  - package.json
+# The interface is bundled into dist/renderer; only native modules come from node_modules.
+npmRebuild: false
+extraResources:
+  - from: build/hvnt33
+    to: hvnt33
+# The server's npm dependencies are copied in here (resources leave out node_modules).
+afterPack: build-resources/after-pack.cjs
+asarUnpack:
+  - "**/node_modules/node-pty/**"
+mac:
+  category: public.app-category.productivity
+  target: [dmg]
+  hardenedRuntime: true
+  # The Java runtime compiles code at run time (JIT), as V8 does.
+  entitlements: build-resources/entitlements.mac.plist
+  entitlementsInherit: build-resources/entitlements.mac.plist
+  minimumSystemVersion: "12.0"
+win:
+  target: [nsis]
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+linux:
+  target: [AppImage, deb]
+  category: Office
+  maintainer: hvnt33 contributors

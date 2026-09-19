@@ -1,0 +1,38 @@
+{
+  "name": "@hvnt33/ui",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "description": "The hvnt33 app interface (React) and the scripts it runs in browsed pages. Hosted by a native shell that supplies the bridge (apps/electron).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.tsx",
+    "./native": "./src/lib/native.ts",
+    "./page-scripts/*": "./page-scripts/*"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/castoro": "5.3.0",
+    "@fontsource/castoro-titling": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "@fontsource/ibm-plex-sans": "5.3.0",
+    "@hvnt33/api-client": "*",
+    "@hvnt33/core": "*",
+    "@xterm/addon-fit": "0.11.0",
+    "@xterm/addon-webgl": "0.19.0",
+    "@xterm/xterm": "6.0.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "happy-dom": "20.14.5",
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  }
+}

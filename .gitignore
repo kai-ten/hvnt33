@@ -1,0 +1,11 @@
+node_modules/
+.env
+data/
+*.log
+.DS_Store
+docs/notes/
+*.tsbuildinfo
+test-results/
+playwright-report/
+apps/server/vendor/tor/
+apps/server/vendor/runtime/

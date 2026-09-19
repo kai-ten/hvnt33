@@ -1,0 +1,9 @@
+.next/
+out/
+test-results/
+playwright-report/
+next-env.d.ts
+/out-mark/
+out-email/
+.env.local
+.env*.local

@@ -1,0 +1,33 @@
+# The live app session: real search engines, timestamp authorities and a real
+# window. Run on demand, on a self-hosted macOS runner (it opens a window).
+# The app runs its own server and built-in database in temporary folders.
+name: E2E (live, manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Server shape
+        type: choice
+        options: [local, token]
+        default: local
+
+permissions:
+  contents: read
+
+jobs:
+  e2e:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: npm ci
+      - run: npm run setup
+      - name: Live session
+        run: npm run e2e -- ${{ inputs.mode == 'token' && '--token' || '' }} --screenshots e2e-screenshots
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: e2e-screenshots-${{ inputs.mode }}
+          path: e2e-screenshots
+          if-no-files-found: ignore

@@ -1,0 +1,23 @@
+{
+  "name": "@hvnt33/api-client",
+  "private": true,
+  "version": "0.2.0",
+  "license": "AGPL-3.0-only",
+  "description": "Typed hvnt33 API client generated from the server's OpenAPI description. Generation uses TypeScript 5 (openapi-typescript needs its compiler API; the rest of the repo uses TypeScript 7).",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./openapi.json": "./openapi.json"
+  },
+  "scripts": {
+    "generate": "openapi-typescript openapi.json -o src/schema.d.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openapi-fetch": "0.17.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "7.13.0",
+    "typescript": "5.9.3"
+  }
+}

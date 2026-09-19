@@ -1,0 +1,5 @@
+Contact: https://github.com/kai-ten/hvnt33/security/advisories/new
+Expires: 2027-09-18T00:00:00.000Z
+Policy: https://github.com/kai-ten/hvnt33/blob/main/SECURITY.md
+Preferred-Languages: en
+Canonical: https://hvnt33.com/.well-known/security.txt

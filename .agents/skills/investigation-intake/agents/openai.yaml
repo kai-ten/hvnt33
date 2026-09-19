@@ -1,0 +1,4 @@
+interface:
+  display_name: "File Investigation Material"
+  short_description: "Sort chat material into source-linked research"
+  default_prompt: "Use $investigation-intake to file this material into my investigation."

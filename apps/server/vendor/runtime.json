@@ -1,0 +1,44 @@
+{
+  "comment": "The database built into hvnt33 (npm run setup): Eclipse Temurin JRE and ArcadeDB, each checked against these SHA-256 hashes (published by Adoptium and by ArcadeDB's GitHub releases). Jars matching 'exclude' are not installed. Update with: npm run runtime:update",
+  "java": {
+    "feature": 25,
+    "release": "jdk-25.0.4.1+1",
+    "files": {
+      "macos-aarch64": {
+        "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_mac_hotspot_25.0.4.1_1.tar.gz",
+        "sha256": "5b02bcc908da092e7e00b9772d4f9bbb87f44a60b7c90f7cf5a91a1d98f37e1b"
+      },
+      "macos-x86_64": {
+        "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_mac_hotspot_25.0.4.1_1.tar.gz",
+        "sha256": "099cbc182af99ab454991a4230f0bdbf2b2ee3f61ce462d637aceaa12709380d"
+      },
+      "linux-x86_64": {
+        "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_linux_hotspot_25.0.4.1_1.tar.gz",
+        "sha256": "1731a34baadec5479258ea0202e4d5d865d2efeee60cb0c7d7eb056fe96ca219"
+      },
+      "linux-aarch64": {
+        "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_aarch64_linux_hotspot_25.0.4.1_1.tar.gz",
+        "sha256": "34828cbb93ed31c281c84ecb31ddab655d11a802f263c1fc019d42e9e0230fed"
+      },
+      "windows-x86_64": {
+        "url": "https://github.com/adoptium/temurin25-binaries/releases/download/jdk-25.0.4.1%2B1/OpenJDK25U-jre_x64_windows_hotspot_25.0.4.1_1.zip",
+        "sha256": "4c95451cea98556def2c54f7782933f52a26d4a36bd85e1d59f0364464828b07"
+      }
+    }
+  },
+  "arcadedb": {
+    "version": "26.9.1",
+    "url": "https://github.com/ArcadeData/arcadedb/releases/download/26.9.1/arcadedb-26.9.1-base.tar.gz",
+    "sha256": "8c3ec6d843cb5b1356642988d65c71d991ccb8c28a43431eb670b018e75410f2",
+    "exclude": [
+      "arcadedb-ha-raft-*",
+      "arcadedb-mcp-*",
+      "js-language-*",
+      "icu4j-*",
+      "truffle-*",
+      "regex-*",
+      "xz-*",
+      "jline-*"
+    ]
+  }
+}

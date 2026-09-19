@@ -1,0 +1,29 @@
+name: Search engine broke
+description: An engine's results are missing or wrong (engines change their pages often)
+labels: [engine]
+body:
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Engine
+      options: [Google, DuckDuckGo, Bing, Brave, Startpage, Mojeek, Yandex]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What do you see?
+      description: No results, wrong URLs, a bot check, missing snippets… A screenshot of the results page helps.
+    validations:
+      required: true
+  - type: input
+    id: query
+    attributes:
+      label: A query that shows it
+      description: Use a harmless public query, not one from a private investigation.
+  - type: textarea
+    id: diag
+    attributes:
+      label: Diagnostics (optional)
+      description: Output of `HVNT33_E2E_VERBOSE=1 npm run e2e` for the failing engine.
+      render: text

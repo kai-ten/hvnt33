@@ -1,0 +1,12 @@
+{
+  "comment": "The Tor Expert Bundle hvnt33 installs (npm run setup). Hashes were taken from bundles whose Tor Browser Developers GPG signatures verified (primary key EF6E286DDA85EA2A4BA7DE684E2C6E8793298290). Update with: npm run tor:update -- <version>",
+  "version": "15.0.23",
+  "tor": "0.4.9.12",
+  "base": "https://dist.torproject.org/torbrowser",
+  "sha256": {
+    "macos-aarch64": "e8ea3f667c83309abad34280f0f9e1cfae52843da6b8db111ca15d6221051db5",
+    "macos-x86_64": "be1be1cb13cd093713f02a0beade0d2471b61119011bfeb0efc08353eadf2e4e",
+    "windows-x86_64": "231dad6b9cb401a54c260db7046965ef04e4f72ff071b140d423fb5da281ab1e",
+    "linux-x86_64": "08d49de27f542b8f73e2014e064d8320562b5d20019c03d4725c5a5249d97985"
+  }
+}

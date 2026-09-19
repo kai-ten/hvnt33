@@ -1,0 +1,41 @@
+{
+  "name": "hvnt33",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "description": "Open-source investigation workbench: search every engine, capture evidence, archive the web, and file it into a graph with an AI agent. One app, with its server and database built in.",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "setup": "node apps/server/scripts/setup.ts && node scripts/electron.ts && node scripts/runtime.ts && node scripts/tor.ts",
+    "start": "node --env-file=.env apps/server/src/main.ts",
+    "research": "node --env-file=.env apps/server/scripts/research.ts",
+    "backup": "node --env-file=.env apps/server/scripts/backup.ts",
+    "restore": "node --env-file=.env apps/server/scripts/restore.ts",
+    "admin": "node --env-file=.env apps/server/scripts/admin.ts",
+    "desktop": "npm run app -w @hvnt33/desktop",
+    "openapi": "node apps/server/scripts/openapi.ts && npm run generate -w @hvnt33/api-client",
+    "test": "npm run test:local && npm run test:token",
+    "test:local": "node scripts/test-server.ts local",
+    "test:token": "node scripts/test-server.ts token",
+    "test:unit": "node --test apps/server/tests/unit.test.ts",
+    "test:core": "npm test -w @hvnt33/core",
+    "typecheck": "npm run typecheck -w @hvnt33/server && npm run typecheck -w @hvnt33/core && npm run typecheck -w @hvnt33/ui && npm run typecheck -w @hvnt33/desktop",
+    "verify": "npm run typecheck && npm run test:unit && npm run test:core && npm test -w @hvnt33/ui && npm run verify -w @hvnt33/desktop",
+    "e2e": "npm run e2e -w @hvnt33/desktop --",
+    "test:live": "node scripts/test-server.ts live",
+    "release:check": "node scripts/release-check.ts",
+    "demo": "node --env-file=.env scripts/demo.ts",
+    "tor:fetch": "node scripts/tor.ts",
+    "tor:update": "node scripts/tor.ts update",
+    "runtime:fetch": "node scripts/runtime.ts",
+    "runtime:update": "node scripts/runtime.ts update",
+    "package": "npm run package -w @hvnt33/desktop"
+  }
+}

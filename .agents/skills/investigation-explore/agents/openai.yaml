@@ -1,0 +1,4 @@
+interface:
+  display_name: "Explore an Investigation"
+  short_description: "Find connections, contradictions and research gaps"
+  default_prompt: "Use $investigation-explore to show what connects these records."

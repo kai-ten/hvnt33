@@ -1,0 +1,4 @@
+interface:
+  display_name: "Produce Investigation Outputs"
+  short_description: "Turn sourced research into reusable visual outputs"
+  default_prompt: "Use $investigation-output to turn this investigation into a timeline and evidence map."

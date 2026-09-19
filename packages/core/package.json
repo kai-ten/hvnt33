@@ -1,0 +1,21 @@
+{
+  "name": "@hvnt33/core",
+  "private": true,
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "description": "Shared hvnt33 domain logic: search engines, result normalization, research events and the query language.",
+  "type": "module",
+  "exports": {
+    "./engines": "./src/engines.ts",
+    "./events": "./src/events.ts",
+    "./spl": "./src/spl.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vitest": "5.0.1"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@hvnt33/server",
+  "private": true,
+  "version": "0.2.0",
+  "license": "AGPL-3.0-only",
+  "description": "hvnt33 server: investigations, evidence, intake, search runs, visits and web archive over ArcadeDB, with auth, workspace, storage and entitlement seams.",
+  "type": "module",
+  "main": "src/main.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "openapi": "node scripts/openapi.ts"
+  },
+  "dependencies": {
+    "archiver": "8.0.0",
+    "diff": "9.0.0",
+    "express": "5.2.1",
+    "fetch-socks": "1.3.3",
+    "multer": "2.4.0",
+    "socks": "2.8.10",
+    "undici": "8.10.2",
+    "warcio": "2.4.12",
+    "yauzl": "3.4.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@types/archiver": "8.0.0",
+    "@types/express": "5.0.6",
+    "@types/multer": "2.2.0",
+    "@types/node": "24.13.5",
+    "@types/yauzl": "3.4.0",
+    "typescript": "7.0.2"
+  }
+}

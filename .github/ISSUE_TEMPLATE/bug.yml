@@ -1,0 +1,46 @@
+name: Bug report
+description: Something doesn't work as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Security problems: please report privately (see SECURITY.md), not here.
+        Don't paste private research, real people's personal details, API tokens or `.env` contents.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Search for …\n2. Open the second result\n3. Press ⌘⇧S"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: hvnt33 version or commit
+    validations:
+      required: true
+  - type: dropdown
+    id: part
+    attributes:
+      label: Part
+      options: [Desktop app, Search engines / results, Capture, Search Lab, Web archive / snapshots, Server / API, Agent / CLI, Install / setup, Other]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: macOS 26.1 on Apple Silicon (or Windows 11, Ubuntu 24.04), hvnt33 0.1.0 installed or from source; local or token mode
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or output
+      description: Server log lines, `npm run e2e` output, or a screenshot. Remove anything private.
+      render: text

@@ -1,0 +1,1 @@
+export const routes = ["/", "/download", "/features", "/investigations", "/investigations/check-your-email", "/investigations/subscribed", "/investigations/link-expired", "/cloud", "/community", "/docs", "/docs/using-hvnt33", "/docs/desktop", "/docs/agent-workflow", "/docs/operations", "/docs/architecture", "/security", "/changelog", "/privacy"];
