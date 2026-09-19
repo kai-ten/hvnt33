@@ -18,7 +18,10 @@ exports.default = async function afterPack(context) {
   const product = context.packager.appInfo.productFilename;
   const executable = context.electronPlatformName === "darwin"
     ? path.join(context.appOutDir, `${product}.app`, "Contents", "MacOS", product)
-    : path.join(context.appOutDir, context.electronPlatformName === "win32" ? `${product}.exe` : product);
+    : path.join(
+        context.appOutDir,
+        context.electronPlatformName === "win32" ? `${product}.exe` : context.packager.executableName,
+      );
   await flipFuses(executable, {
     version: FuseVersion.V1,
     strictlyRequireAllFuses: true,
