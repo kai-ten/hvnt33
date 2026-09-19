@@ -29,15 +29,15 @@ Contributions are made under AGPL-3.0-only. There is no CLA bot or signature bra
 
 ## 2. Prepare Apple signing and notarization
 
-The Mac currently has two Developer ID Application certificates for the same team: one expires in 2027 and one in 2031. `security find-identity -v -p codesigning` currently reports zero usable identities, so do not delete either certificate until the private key is restored and the command reports a valid identity.
+The Mac has two Developer ID Application certificates for the same team: one expires in 2027 and one in 2031. The 2031 certificate has its private key (labelled `LoreKit`), and `security find-identity -v -p codesigning` reports both Developer ID Application identities as valid. Do not delete either certificate until the 2031 pair is exported and a CI-signed build is verified.
 
 ```text
 Developer ID Application: Kai Herrera (BR6J77ATNC)
 ```
 
-- [ ] In Keychain Access, open **My Certificates** and expand both Developer ID Application entries.
-- [ ] Confirm that the 2031 entry has an indented private-key child. If it does not, import the original password-protected `.p12` or issue a replacement certificate from a CSR created on this Mac.
-- [ ] Run `security find-identity -v -p codesigning` and continue only after it reports the 2031 Developer ID Application identity as valid.
+- [x] In Keychain Access, open **My Certificates** and expand the 2031 Developer ID Application entry.
+- [x] Confirm that the 2031 entry has an indented private-key child (`LoreKit`).
+- [x] Run `security find-identity -v -p codesigning` and confirm it reports the Developer ID Application identities as valid.
 - [ ] Export a backup before deleting anything. Only after the 2031 identity is usable may the expiring 2027 duplicate be removed.
 - [ ] Export that pair as a password-protected `.p12`.
 - [ ] Create an Apple app-specific password at appleid.apple.com.
