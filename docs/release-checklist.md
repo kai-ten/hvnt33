@@ -11,9 +11,11 @@ This is the maintainer checklist for making HVNT33 downloadable as signed instal
 - [x] Runtime downloads and Tor bundles are pinned and verified
 - [x] Current desktop and website release work committed
 - [x] Fresh public history created at `https://github.com/kai-ten/hvnt33` (the private history remains private)
-- [ ] Apple signing secrets installed in GitHub
+- [x] Apple signing secrets installed in GitHub
 - [ ] Windows signing approach chosen
 - [ ] First draft release tested on clean machines
+
+The `v0.1.0` draft was rebuilt successfully from public commit `936603e` on 2026-09-20. The [release workflow](https://github.com/kai-ten/hvnt33/actions/runs/35489235537) passed on macOS Apple Silicon, macOS Intel, Windows and Linux. Both downloaded DMGs matched `SHA256SUMS`, contained stapled Apple notarization tickets and were accepted by Gatekeeper as `Developer ID Application: Kai Herrera (BR6J77ATNC)`. The draft remains unpublished until the clean-machine checks below are complete.
 
 Do not upload the existing local DMG. It is an ad-hoc development build without an Apple notarization ticket. Rebuild it through the signed release workflow.
 
@@ -22,7 +24,7 @@ Do not upload the existing local DMG. It is an ad-hoc development build without 
 - [x] AGPL-3.0 choice reviewed with counsel on 2026-09-19; the proprietary cloud will remain separately implemented across a network API boundary.
 - [ ] Complete a trademark/name search for “HVNT33” in every market where it will be sold.
 - [x] Confirm continued ownership of `hvnt33.com` and the `kai-ten/hvnt33` GitHub repository.
-- [ ] Decide whether the first release is the `v0.1.0` prerelease currently configured.
+- [x] Use `v0.1.0` as the first prerelease.
 - [x] Include the current `apps/web` work in the first public repository.
 
 Contributions are made under AGPL-3.0-only. There is no CLA bot or signature branch.
@@ -38,11 +40,10 @@ Developer ID Application: Kai Herrera (BR6J77ATNC)
 - [ ] In Keychain Access, open **My Certificates** and expand both Developer ID Application entries.
 - [ ] Confirm that the 2031 entry has an indented private-key child. If it does not, import the original password-protected `.p12` or issue a replacement certificate from a CSR created on this Mac.
 - [ ] Run `security find-identity -v -p codesigning` and continue only after it reports the 2031 Developer ID Application identity as valid.
-- [ ] Export a backup before deleting anything. Only after the 2031 identity is usable may the expiring 2027 duplicate be removed.
-- [ ] Export that pair as a password-protected `.p12`.
-- [ ] Create an Apple app-specific password at appleid.apple.com.
-- [ ] Confirm the Apple Team ID (`BR6J77ATNC` is present in the installed certificate).
-- [ ] Encode the certificate locally:
+- [x] Export the 2031 identity and private key as a password-protected `.p12` before deleting anything.
+- [x] Create an Apple app-specific password at appleid.apple.com.
+- [x] Confirm the Apple Team ID (`BR6J77ATNC`).
+- [x] Encode the certificate locally and store it as a GitHub Actions secret:
 
 ```sh
 base64 -i certificate.p12 | pbcopy
@@ -56,8 +57,8 @@ The Developer ID Installer certificate is not used for the current `.dmg` releas
 
 - [x] Create the public repository at `kai-ten/hvnt33` from a clean one-commit history.
 - [x] Enable **Security → Private vulnerability reporting**, secret scanning, push protection, vulnerability alerts, and Dependabot security updates.
-- [ ] Protect `main` and require the CI checks before merging.
-- [ ] Add these under **Settings → Secrets and variables → Actions**:
+- [x] Protect `main` and require the CI checks before merging.
+- [x] Add these under **Settings → Secrets and variables → Actions**:
 
 ```text
 APPLE_CERTIFICATE
@@ -148,23 +149,23 @@ Use clean machines or fresh OS user accounts. For every platform:
 - [ ] Reopening preserves cases, tabs, and the intended browser profile.
 - [ ] Uninstalling behaves as documented and does not unexpectedly delete research.
 
-On macOS also run:
+On macOS also run (replace the DMG name with the architecture downloaded):
 
 ```sh
 codesign --verify --deep --strict --verbose=2 /Applications/HVNT33.app
 spctl --assess --type execute --verbose=4 /Applications/HVNT33.app
-xcrun stapler validate HVNT33-0.1.0.dmg
+xcrun stapler validate HVNT33-0.1.0-arm64.dmg
 ```
 
 On Windows, verify the publisher with PowerShell:
 
 ```powershell
-Get-AuthenticodeSignature .\HVNT33-Setup-0.1.0.exe | Format-List
+Get-AuthenticodeSignature .\HVNT33-0.1.0-x64.exe | Format-List
 ```
 
 ## 9. Publish and link the download
 
-- [ ] Add SHA-256 checksums for every installer to the draft release.
+- [x] Add SHA-256 checksums for every installer to the draft release.
 - [ ] Write release notes including supported platforms, known limitations, data location, and unsigned-platform warnings if any.
 - [ ] Publish the GitHub release only after the installer matrix passes.
 - [ ] Point the hvnt33.com Download page to the GitHub release assets and their checksums.
