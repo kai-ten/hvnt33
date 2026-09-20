@@ -204,7 +204,10 @@ button.mini { margin-top: 6px; font-size: 11px; color: var(--amber); border: 1px
 .home-links button::after { content: attr(data-label); position: absolute; left: 50%; bottom: calc(100% + 9px); z-index: 3; padding: 4px 7px; border: 1px solid var(--line-2); border-top: 2px solid var(--teal); border-radius: 2px; color: var(--text-2); background: var(--bg-1); box-shadow: 0 6px 18px color-mix(in srgb, var(--marble) 22%, transparent); font: 10px var(--mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; opacity: 0; pointer-events: none; transform: translate(-50%, 4px); transition: opacity .1s ease, transform .1s ease; }
 .home-links button:hover::after, .home-links button:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
 .home-links svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.home-links button:last-child svg, .home-links button:nth-child(2) svg { fill: currentColor; stroke: none; }
+.home-links .brand-fill { fill: currentColor; stroke: none; }
+.home-links .brand-cutout { fill: var(--bg-1); stroke: none; transition: fill .1s ease; }
+.home-links button:hover .brand-cutout { fill: var(--bg-2); }
+.home-links .discord-mark { width: 23px; height: 23px; }
 
 /* ── Right column ───────────────────────────────────────────────────────── */
 .pane-head { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-bottom: 1px solid var(--line); min-height: 38px; }
