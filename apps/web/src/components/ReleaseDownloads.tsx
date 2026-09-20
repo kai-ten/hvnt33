@@ -23,13 +23,15 @@ export function ReleaseDownloads() {
   const [failed, setFailed] = useState(false);
   const [platform, setPlatform] = useState("");
   useEffect(() => {
-    const ua = navigator.userAgent;
-    // Safari and Chromium deliberately do not expose Apple Silicon reliably,
-    // so recommend both Mac builds rather than mislabelling an M-series Mac.
-    setPlatform(/Mac/.test(ua) ? "mac" : /Windows/.test(ua) ? "windows" : /Linux/.test(ua) ? "linux" : "");
     fetch("/api/release", { headers: { Accept: "application/json" } })
       .then(async response => { if (!response.ok) throw new Error(); return response.json(); })
-      .then(setRelease)
+      .then(data => {
+        const ua = navigator.userAgent;
+        // Safari and Chromium deliberately do not expose Apple Silicon
+        // reliably, so recommend both Mac builds rather than mislabelling one.
+        setPlatform(/Mac/.test(ua) ? "mac" : /Windows/.test(ua) ? "windows" : /Linux/.test(ua) ? "linux" : "");
+        setRelease(data);
+      })
       .catch(() => setFailed(true));
   }, []);
   const assets = useMemo(() => release?.assets.slice().sort((a, b) => Number(likely(b, platform)) - Number(likely(a, platform))) ?? [], [release, platform]);
