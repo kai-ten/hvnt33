@@ -41,6 +41,13 @@ async function runFunction(name: string, req: http.IncomingMessage, res: http.Se
 http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
   const rel = decodeURIComponent(url.pathname);
+  // Vercel serves these in production. Empty local stubs let the exported-site
+  // tests verify our pages without treating absent platform scripts as app 404s.
+  if (rel === "/_vercel/insights/script.js" || rel === "/_vercel/speed-insights/script.js") {
+    res.writeHead(200, { "Content-Type": "text/javascript; charset=utf-8", "Cache-Control": "no-store" });
+    res.end();
+    return;
+  }
   const fn = rel.match(/^\/api\/([a-z-]+)$/);
   if (fn && fs.existsSync(path.join(root, "api", `${fn[1]}.ts`))) {
     runFunction(fn[1], req, res, url).catch(err => { console.error(err); res.writeHead(500); res.end(); });

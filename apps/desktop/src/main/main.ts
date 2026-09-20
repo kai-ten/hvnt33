@@ -11,6 +11,7 @@ import { buildMenu, setAppTheme, type AppTheme } from "./menu.ts";
 import { killAllPty } from "./pty.ts";
 import { stopServices } from "./server.ts";
 import { hydrateShellEnv } from "./shell-env.ts";
+import { initUpdates } from "./updates.ts";
 
 // The app interface is served from its own scheme, never from the web or file://.
 const APP_ORIGIN = "app://hvnt33";
@@ -108,6 +109,7 @@ if (!app.requestSingleInstanceLock() && !e2eEnabled()) {
     // Packaged builds take the icon from build-resources; show the same mark in development.
     if (!app.isPackaged) app.dock?.setIcon(path.join(app.getAppPath(), "build-resources", "icon.png"));
     createWindow();
+    initUpdates();
     if (process.env.HVNT33_DEBUG_COMMANDS) console.log(commandNames().sort().join("\n"));
   });
 }

@@ -191,6 +191,13 @@ test("copy buttons copy the commands only, without prompts or comments", async (
   expect(text).toBe("git clone https://github.com/kai-ten/hvnt33.git hvnt33\ncd hvnt33");
 });
 
+test("download page shows the current release and signed platform installers", async ({ page }) => {
+  await page.goto("/download");
+  await expect(page.getByText("Latest: v0.1.0")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Download v0.1.0" })).toHaveCount(2);
+  await expect(page.getByText("macOS builds are signed, notarized and stapled.")).toBeVisible();
+});
+
 test("every internal link and anchor resolves", async ({ page, request }) => {
   const checked = new Map<string, Set<string>>();
   const ids = async (path: string) => {
@@ -217,7 +224,8 @@ test("every internal link and anchor resolves", async ({ page, request }) => {
 test("pages stay inside their JavaScript budget", async ({ page, request }) => {
   // React and the Next router are about 135KB of this on every page; the rest is ours.
   // Home carries the two mosaics (about 20KB of the site's own code).
-  const budgets: Record<string, number> = { "/": 170_000, "/features": 160_000, "/download": 160_000, "/investigations": 160_000, "/cloud": 160_000, "/community": 160_000, "/docs/desktop": 160_000 };
+  // Download carries the live platform/release selector (about 4 KB compressed).
+  const budgets: Record<string, number> = { "/": 170_000, "/features": 160_000, "/download": 165_000, "/investigations": 160_000, "/cloud": 160_000, "/community": 160_000, "/docs/desktop": 160_000 };
   for (const [route, budget] of Object.entries(budgets)) {
     await page.goto(route);
     // noModule scripts are legacy polyfills that modern browsers never download.

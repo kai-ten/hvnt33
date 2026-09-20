@@ -3,6 +3,7 @@ import Link from "next/link";
 import { K } from "@/components/Keys";
 import { PageHead } from "@/components/PageHead";
 import { Prose } from "@/components/Prose";
+import { ReleaseDownloads } from "@/components/ReleaseDownloads";
 import { Terminal } from "@/components/Terminal";
 import { installGuide } from "@/lib/install";
 import { render } from "@/lib/markdown";
@@ -38,14 +39,16 @@ export default async function GetStarted() {
   return (
     <div className="wrap">
       <PageHead title="Download HVNT33" running={<span lang="la">Incipit.</span>}>
-        <p>At the end of this page you&rsquo;ll have HVNT33 open with a fictional demo case to explore. The app brings its own server, database and Tor; all you need is Node.js.</p>
-        <p className="meta mt-4">Signed installers are coming. Today, download the source and build the app with the steps below.</p>
+        <p>One download brings the browser, server, database and Tor. Choose the signed installer for your computer, or build the AGPL source yourself.</p>
       </PageHead>
+
+      <ReleaseDownloads />
 
       <div className="grid gap-16 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-16">
         <div className="min-w-0">
           <section aria-labelledby="need" className="border-t border-rule pt-8">
-            <h2 id="need" className="display text-[clamp(1.9rem,1.4rem+1.6vw,2.6rem)]">What you need</h2>
+            <h2 id="need" className="display text-[clamp(1.9rem,1.4rem+1.6vw,2.6rem)]">Build from source</h2>
+            <p className="mt-4 dim">The installer needs no separate Node.js, Java, ArcadeDB, Tor or Docker. These requirements are only for building and developing HVNT33 yourself.</p>
             <ul className="mt-6 grid gap-4">
               <li className="grid gap-1 sm:grid-cols-[1fr_auto] sm:gap-6 border-b border-rule pb-4">
                 <span>A computer running macOS, Windows or Linux</span>
@@ -63,7 +66,7 @@ export default async function GetStarted() {
           </section>
 
           <section aria-labelledby="steps" className="mt-16 border-t border-rule pt-8">
-            <h2 id="steps" className="display text-[clamp(1.9rem,1.4rem+1.6vw,2.6rem)]">Install and start</h2>
+            <h2 id="steps" className="display text-[clamp(1.9rem,1.4rem+1.6vw,2.6rem)]">Build and start</h2>
             <ol className="mt-4">
               {guide.steps.map((s, i) => (
                 <li key={s.id} id={s.id} className="py-8 border-b border-rule last:border-0" data-reveal>

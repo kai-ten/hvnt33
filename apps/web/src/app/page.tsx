@@ -116,7 +116,7 @@ export default function Home() {
         <h2 id="run" className={heading} data-reveal>Open the browser tonight</h2>
         <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-start" data-reveal>
           <div>
-            <p className="max-w-[48ch]">You need Node.js on macOS, Windows or Linux. Everything else, the server, the database and Tor, is built into the app. Signed installers are coming; for now you build it from source, which also means you can read every line.</p>
+            <p className="max-w-[48ch]">Download one app for macOS, Windows or Linux. The server, database and Tor are built in; no Node.js or Docker is needed unless you choose to build the source yourself.</p>
             <p className="mt-6"><Link href="/download" className="btn btn-primary">Download and install</Link></p>
           </div>
           <Terminal label="Install and start HVNT33" lines={quick} />

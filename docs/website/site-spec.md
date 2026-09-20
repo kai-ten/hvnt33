@@ -82,7 +82,7 @@ Cross-Origin-Resource-Policy: same-origin
 - **No third-party origins at all.** Fonts are self-hosted through `next/font`, images are local, there are no embeds. The CSP above has no external hosts, and a test checks that a full page load makes no request off the site's origin.
 - `dangerouslySetInnerHTML` only for build-time output of our own MDX and Shiki. Never for anything that comes from a URL, query string or external source.
 - External links: `rel="noopener noreferrer"`.
-- **Install instructions never pipe a download into a shell** (`curl ... | sh`). They clone the repository and run named npm scripts, exactly as the README does. When signed builds exist, the download page lists each file's SHA-256 and how to check it.
+- **Install instructions never pipe a download into a shell** (`curl ... | sh`). The download page obtains the latest published version and its validated platform assets through the same-origin `/api/release` function, lists each available SHA-256, and keeps the source-build path below the installers.
 - `security.txt` at `/.well-known/security.txt` pointing to the process in `SECURITY.md`, with an expiry date the release checklist renews.
 - DNS for hvnt33.com: CAA records naming only the certificate authority in use, DNSSEC on, and the HSTS preload list once the site is stable.
 
@@ -135,7 +135,7 @@ Only what has shipped. Each entry: an English heading, a Roman numeral, two or t
 | XIII | Local first | The server, the ArcadeDB database and Tor are built into the app; local cases live on your computer. Local use needs no HVNT33 account and sends no telemetry. Connect to a hosted hvnt33 server instead if you choose; its token is kept encrypted by the operating system. | Architecture; Operations |
 | XIV | Built to be attacked | Web pages run with no access to the app, the terminal or your files, and tests prove it from inside a live page. Replayed archives run on a separate origin with no API. | desktop README, Security model |
 
-Platform line, stated plainly on Home, Features and Download: **macOS, Windows and Linux. Open source under AGPL-3.0. Signed installers are coming; today you build it from source.** (One app: the server, the database and Tor are built in; no Docker.)
+Platform line, stated plainly on Home, Features and Download: **macOS, Windows and Linux. Open source under AGPL-3.0. One download includes the server, database and Tor; no Docker.** Download shows the latest published GitHub release and keeps the source-build instructions available.
 
 ## Download
 
