@@ -2,6 +2,7 @@
 # built-in database and Tor staged by scripts/package.ts into build/hvnt33.
 appId: dev.hvnt33.desktop
 productName: HVNT33
+artifactName: "${productName}-${version}-${arch}.${ext}"
 copyright: Copyright © 2026 hvnt33 contributors. Licensed under the GNU AGPL v3.
 directories:
   output: release
