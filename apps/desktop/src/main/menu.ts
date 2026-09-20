@@ -73,6 +73,7 @@ export function buildMenu(): Menu {
       ],
     },
     { label: "Window", submenu: [{ role: "minimize" }, { role: "zoom" }] },
+    { label: "Help", submenu: [item("check-updates", "Check for Updates…"), { type: "separator" }, item("website", "HVNT33 Website")] },
   ];
   return Menu.buildFromTemplate(template);
 }

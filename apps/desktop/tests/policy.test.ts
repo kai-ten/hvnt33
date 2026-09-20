@@ -8,6 +8,7 @@ import {
   isE2EPartition, isLoopback, isTabLabel, normalizeServerUrl, parseEnv, parseRoute, parseWebUrl, partitionFor, portFromEnvFile,
   safeFileName, unusedPath, validApiPath,
 } from "../src/main/policy";
+import { isNewerVersion, newestPublicRelease } from "../src/main/update-policy";
 
 const A = "2c58bca3-e533-443b-b29c-efe6e375eeb5";
 const B = "e5eb201c-369c-4857-ba5e-075df4b517e7";
@@ -30,6 +31,25 @@ describe("browsed tabs", () => {
     expect(parseRoute(" socks5h://10.64.0.1:1080 ")).toBe("socks5://10.64.0.1:1080");
     expect(parseRoute("http://proxy.example:8080/")).toBe("http://proxy.example:8080");
     for (const bad of ["https://proxy.example:443", "socks5://127.0.0.1", "socks5://u:p@host:1080", "file:///etc/hosts", "nonsense", ""]) expect(() => parseRoute(bad), bad).toThrow();
+  });
+});
+
+describe("release notifications", () => {
+  it("compares stable and prerelease versions", () => {
+    expect(isNewerVersion("0.1.0", "0.1.1")).toBe(true);
+    expect(isNewerVersion("0.2.0", "0.1.9")).toBe(false);
+    expect(isNewerVersion("1.0.0-beta.1", "1.0.0")).toBe(true);
+    expect(isNewerVersion("1.0.0", "1.1.0-beta.1")).toBe(true);
+    expect(isNewerVersion("not-a-version", "2.0.0")).toBe(false);
+  });
+
+  it("accepts only published releases from the HVNT33 repository", () => {
+    const release = newestPublicRelease([
+      { draft: true, tag_name: "v9.0.0", html_url: "https://github.com/kai-ten/hvnt33/releases/tag/v9.0.0", published_at: "2026-09-20T00:00:00Z" },
+      { draft: false, tag_name: "v0.2.0", name: "HVNT33 v0.2.0", html_url: "https://github.com/kai-ten/hvnt33/releases/tag/v0.2.0", published_at: "2026-09-20T00:00:00Z", prerelease: false },
+    ]);
+    expect(release).toMatchObject({ version: "0.2.0", prerelease: false });
+    expect(newestPublicRelease([{ draft: false, tag_name: "v8.0.0", html_url: "https://evil.example/release", published_at: "2026-09-20T00:00:00Z" }])).toBe(null);
   });
 });
 

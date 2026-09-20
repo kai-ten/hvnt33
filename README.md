@@ -13,7 +13,7 @@ An investigation workbench. Search every engine at once, read and capture eviden
 
 ## Install
 
-hvnt33 is one desktop app for macOS, Windows and Linux: the browser, the server, the database (ArcadeDB on a bundled Java runtime) and Tor, in one download. Until signed installers are published, build it from source. You need:
+hvnt33 is one desktop app for macOS, Windows and Linux: the browser, the server, the database (ArcadeDB on a bundled Java runtime) and Tor, in one download. Published signed releases appear on the [Download page](https://hvnt33.com/download); to build it from source, you need:
 
 - **Node.js 22.18 or later** (`node --version`)
 - **Claude Code** or **Codex** for the agent that files your captures (optional, but it's how material becomes research)

@@ -4,6 +4,9 @@ All notable changes to hvnt33. Dates are when the work was completed.
 
 ## Unreleased: preparing the first public release
 
+- The desktop checks for a newer published version after launch without downloading or installing anything automatically. A persistent notice links to the signed download and release notes, and Help → Check for Updates runs the check on demand.
+- The website Download page reads the latest published GitHub release through a cached same-origin endpoint and shows the version, platform installers, sizes and SHA-256 digests.
+
 - One app on macOS, Windows and Linux, with nothing else to install. The desktop app is rebuilt on Electron: the same interface (now `packages/ui`) and features, one browser engine everywhere. It runs its own server; the server starts a built-in ArcadeDB (26.9.1, on Eclipse Temurin 25, both checksum-verified) instead of Docker. `npm run package` builds an installer with the server, the database and Tor inside. Installed apps keep research in their data folder and set up their own agent workspace.
 - Snapshots are made in the app's own browser: a hidden window loads the page through the case's route and records every response, with a screenshot and the rendered text. No crawler or Docker. A server without the app still archives the HTML.
 - Captured images are fetched through the tab's own session, so through the case's route (they were fetched directly before). A paused case refuses every request of its tabs, not only navigations; routed tabs send loopback traffic through the route too.

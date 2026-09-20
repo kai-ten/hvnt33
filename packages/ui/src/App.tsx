@@ -10,7 +10,7 @@ import { DEFAULT_ENGINES, ENGINES, domainOf, engineById, parseReplayUrl, parseSe
 import mark2x from "../assets/mark@2x.png";
 import mark3x from "../assets/mark@3x.png";
 import { allEvents, urlIndex, type CaseNetwork, type ArchiveHistory, type ArchiveJob, type Dossier, type IntakeSummary, type Investigation, type OwnSnapshot, type PageChange, type PageVisit, type SavedSearch, type SearchRun, type Watch } from "@hvnt33/core/events";
-import { browser, focusApp, hasNative, invoke, network, onMenu, openExternal, services, setNativeTheme, submitCapture, type AppTheme, type Exit, type ServiceStatus } from "./lib/native";
+import { browser, focusApp, hasNative, invoke, network, onMenu, openExternal, services, setNativeTheme, submitCapture, updates, type AppTheme, type Exit, type ServiceStatus, type UpdateState } from "./lib/native";
 import { data, type NetworkChange } from "./lib/data";
 import { engineOf, loadTabs, profileFor, profileKey, saveTabs, tabsKey, type ProfileChoice } from "./lib/tabs";
 import { BrowsingPanel } from "./components/BrowsingPanel";
@@ -105,6 +105,8 @@ export default function App() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [showConnection, setShowConnection] = useState(false);
   const [caseAdmin, setCaseAdmin] = useState<"list" | "create" | null>(null);
+  const [update, setUpdate] = useState<UpdateState | null>(null);
+  const [dismissedUpdate, setDismissedUpdate] = useState(() => store.get("hvnt33.update-dismissed", ""));
 
   const caseRef = useRef(caseId);
   const tabsRef = useRef(tabs);
@@ -161,6 +163,12 @@ export default function App() {
     if (!hasNative()) return;
     services.status().then(s => { setStatus(s); if (!s.server || !s.database) void startServices(); });
   }, [startServices]);
+  useEffect(() => {
+    if (!hasNative()) return;
+    void updates.get().then(setUpdate);
+    const off = updates.onState(setUpdate);
+    return () => { void off.then(stop => stop()); };
+  }, []);
 
   const loadCases = useCallback(async () => {
     const [list, archived] = await Promise.all([data.investigations(), data.archivedInvestigations()]);
@@ -834,6 +842,12 @@ export default function App() {
       case "theme-nox": setThemeChoice("nox"); break;
       case "connection": setShowConnection(true); void focusApp(); break;
       case "clear-browsing-data": setShowBrowsing(true); void focusApp(); break;
+      case "check-updates": void updates.check().then(next => {
+        setUpdate(next);
+        if (next.status === "current") flash(`HVNT33 ${next.currentVersion} is up to date.`, "ok");
+        if (next.status === "error") flash(next.message, "warn");
+      }); break;
+      case "website": void openExternal("https://hvnt33.com"); break;
       case "data-panel": setShowData(v => { store.set("hvnt33.dataPanel", v ? "0" : "1"); return !v; }); break;
       case "toggle-terminal": setTermSize(s => (s === "min" ? "normal" : s)); void focusApp().then(() => terminal.current?.focus()); break;
       case "back": case "forward": case "reload": if (label) void browser.history(label, id); break;
@@ -1225,6 +1239,17 @@ export default function App() {
 
       <aside className={`right ${termSize === "max" && termDock === "side" ? "collapsed" : ""}`} style={{ gridTemplateRows: "auto minmax(0, 1fr)" }}>
         <div>
+          {update?.status === "available" && update.release && dismissedUpdate !== update.release.version && (
+            <div className="service-banner update-banner" role="status">
+              <b>HVNT33 {update.release.version} is available</b>
+              <p>Your research stays open. Download the signed installer when you are ready to update.</p>
+              <div className="row">
+                <button className="primary" onClick={() => void openExternal("https://hvnt33.com/download")}>View download</button>
+                <button className="ghost" onClick={() => void openExternal(update.release!.url)}>Release notes</button>
+                <button className="ghost" onClick={() => { store.set("hvnt33.update-dismissed", update.release!.version); setDismissedUpdate(update.release!.version); }}>Later</button>
+              </div>
+            </div>
+          )}
           {connected && status && !status.current && (
             <div className="service-banner">
               <b>Restart the HVNT33 server</b>

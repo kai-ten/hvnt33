@@ -16,6 +16,13 @@ http.createServer(async (req, res) => {
   const send = (status: number, data: unknown) => { res.writeHead(status, { "Content-Type": "application/json" }); res.end(JSON.stringify(data)); };
   if (req.url === "/_calls") return send(200, calls);
   if (req.url === "/_reset") { calls.length = 0; contacts.clear(); return send(200, {}); }
+  if (req.url === "/github-releases") return send(200, [{
+    draft: false, prerelease: true, tag_name: "v0.1.0", name: "HVNT33 v0.1.0", html_url: "https://github.com/kai-ten/hvnt33/releases/tag/v0.1.0", published_at: "2026-09-20T04:44:00Z",
+    assets: [
+      { name: "HVNT33-0.1.0-arm64.dmg", browser_download_url: "https://github.com/kai-ten/hvnt33/releases/download/v0.1.0/HVNT33-0.1.0-arm64.dmg", size: 248849237, digest: `sha256:${"a".repeat(64)}` },
+      { name: "HVNT33-0.1.0-x64.exe", browser_download_url: "https://github.com/kai-ten/hvnt33/releases/download/v0.1.0/HVNT33-0.1.0-x64.exe", size: 209982949, digest: `sha256:${"b".repeat(64)}` },
+    ],
+  }]);
   calls.push({ method: req.method!, path: req.url!, body, auth: req.headers.authorization });
   if (req.headers.authorization !== "Bearer re_test") return send(401, { message: "API key is invalid" });
   if (req.method === "POST" && req.url === "/emails") return send(200, { id: "email_1" });
