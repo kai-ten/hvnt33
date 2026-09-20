@@ -1239,14 +1239,21 @@ export default function App() {
 
       <aside className={`right ${termSize === "max" && termDock === "side" ? "collapsed" : ""}`} style={{ gridTemplateRows: "auto minmax(0, 1fr)" }}>
         <div>
-          {update?.status === "available" && update.release && dismissedUpdate !== update.release.version && (
+          {update && ["available", "downloading", "downloaded"].includes(update.status) && update.release && dismissedUpdate !== update.release.version && (
             <div className="service-banner update-banner" role="status">
-              <b>HVNT33 {update.release.version} is available</b>
-              <p>Your research stays open. Download the signed installer when you are ready to update.</p>
+              <b>{update.status === "downloaded" ? `HVNT33 ${update.release.version} is ready` : `Downloading HVNT33 ${update.release.version}`}</b>
+              <p>{update.status === "downloaded"
+                ? "Restart when you are ready. HVNT33 will close the agent and database cleanly, install the signed update, and reopen."
+                : update.installable
+                  ? `Your investigation stays open while the signed update downloads${update.status === "downloading" ? ` — ${Math.round(update.progress)}%` : ""}.`
+                  : "This Linux package is updated through your package manager; the signed download is available on the website."}</p>
+              {update.status === "downloading" && <progress className="update-progress" max="100" value={update.progress} aria-label={`Update download ${Math.round(update.progress)}%`} />}
               <div className="row">
-                <button className="primary" onClick={() => void openExternal("https://hvnt33.com/download")}>View download</button>
+                {update.status === "downloaded" && <button className="primary" onClick={() => void updates.install()}>Restart and install</button>}
+                {update.status === "available" && update.installable && <button className="primary" onClick={() => void updates.download()}>Download now</button>}
+                {!update.installable && <button className="primary" onClick={() => void openExternal("https://hvnt33.com/download")}>View download</button>}
                 <button className="ghost" onClick={() => void openExternal(update.release!.url)}>Release notes</button>
-                <button className="ghost" onClick={() => { store.set("hvnt33.update-dismissed", update.release!.version); setDismissedUpdate(update.release!.version); }}>Later</button>
+                {update.status !== "downloading" && <button className="ghost" onClick={() => { store.set("hvnt33.update-dismissed", update.release!.version); setDismissedUpdate(update.release!.version); }}>Later</button>}
               </div>
             </div>
           )}
