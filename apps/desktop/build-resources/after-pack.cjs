@@ -7,6 +7,9 @@ const { execFileSync } = require("node:child_process");
 const { flipFuses, FuseVersion, FuseV1Options } = require("@electron/fuses");
 
 function developerIdIdentity() {
+  // CI and local structural builds explicitly disable identity discovery when
+  // no signing key is meant to be used.
+  if (process.env.CSC_IDENTITY_AUTO_DISCOVERY === "false") return null;
   const requested = process.env.CSC_NAME;
   if (/^[0-9a-f]{40}$/i.test(requested || "")) return requested;
 

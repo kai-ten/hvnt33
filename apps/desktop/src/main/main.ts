@@ -109,7 +109,12 @@ if (!app.requestSingleInstanceLock() && !e2eEnabled()) {
     // Packaged builds take the icon from build-resources; show the same mark in development.
     if (!app.isPackaged) app.dock?.setIcon(path.join(app.getAppPath(), "build-resources", "icon.png"));
     createWindow();
-    initUpdates();
+    initUpdates(async () => {
+      // Finish local writes before the updater closes and relaunches the app.
+      quitting = true;
+      killAllPty();
+      await stopServices();
+    });
     if (process.env.HVNT33_DEBUG_COMMANDS) console.log(commandNames().sort().join("\n"));
   });
 }

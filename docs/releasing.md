@@ -59,11 +59,16 @@ electron-builder signs the macOS app (hardened runtime, with the entitlements th
 1. Update the version in `package.json` and `apps/desktop/package.json` (the release check requires them to agree), and describe the changes in `CHANGELOG.md`.
 2. `npm run verify`, `npm test`, `npm run e2e`, `npm run test:live`, then `npm run release:check`.
 3. Tag and push, for example: `git tag v0.1.0 && git push origin v0.1.0`.
-4. The *Release* workflow re-runs CI, builds the installers (macOS Apple Silicon and Intel `.dmg`, Windows `.exe`, Linux AppImage and `.deb`, each with the server, the built-in database and Tor inside), and opens a **draft** release. Download each build, check it opens, starts its server and shows a case, then publish the draft.
+4. The *Release* workflow re-runs CI, builds the installers (macOS Apple Silicon and Intel `.dmg`, Windows `.exe`, Linux AppImage and `.deb`, each with the server, the built-in database and Tor inside), and opens a **draft** stable release. It also attaches the update ZIP, blockmaps and architecture-specific manifests. Download each build, check it opens, starts its server and shows a case, then publish the draft. Drafts are invisible to installed apps; publishing is what makes the version available.
 
 Local builds: `npm run package` makes this platform's installer in `apps/desktop/release/` (`node apps/desktop/scripts/package.ts --dir` for an unpacked app only). With a Developer ID certificate in your keychain it is signed with it; `CSC_IDENTITY_AUTO_DISCOVERY=false` builds unsigned.
 
+## Desktop updates
+
+Installed apps check the public GitHub release after launch. A newer signed payload downloads without interrupting the investigation; the app then offers **Restart and install**. That action stops the agent terminal, server and embedded database before applying the update and relaunching. macOS uses a signed ZIP, Windows uses NSIS, and Linux uses the installed AppImage or Debian package (the `.deb` path shows the operating system's elevation prompt). GitHub release drafts and prereleases are not offered to stable installations.
+
+The version being published must be greater than the installed version, and all update metadata files from the workflow must remain attached to the release. Never replace an already-published asset in place; cut a new version instead.
+
 ## Not yet
 
-- **Auto-update.** electron-updater with the GitHub releases as the update source, once releases are public and signed; checks will be user-initiated, never in the background.
 - **Tor on Windows and Linux for ARM.** The Tor Project publishes no Expert Bundle for them; those builds offer proxies and a Tor Browser you run.

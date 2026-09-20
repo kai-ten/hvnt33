@@ -42,5 +42,15 @@ else console.log(`(Tor is not available for ${platform} yet; the app will offer 
 
 // 4. Installers.
 const dirOnly = process.argv.includes("--dir");
-run(path.join(root, "node_modules/.bin", process.platform === "win32" ? "electron-builder.cmd" : "electron-builder"), ["--config", "electron-builder.yml", ...(dirOnly ? ["--dir"] : [])]);
+run(path.join(root, "node_modules/.bin", process.platform === "win32" ? "electron-builder.cmd" : "electron-builder"), ["--config", "electron-builder.yml", "--publish", "never", ...(dirOnly ? ["--dir"] : [])]);
+// Update metadata otherwise has the same name for both Mac architectures.
+if (!dirOnly) {
+  const metadata = process.platform === "darwin" ? "latest-mac.yml" : process.platform === "win32" ? "latest.yml" : "latest-linux.yml";
+  const channel = process.platform === "darwin" ? `latest-${process.arch}-mac.yml` : process.platform === "win32" ? `latest-${process.arch}.yml` : `latest-${process.arch}-linux.yml`;
+  const source = path.join(here, "release", metadata);
+  const destination = path.join(here, "release", channel);
+  if (!fs.existsSync(source)) throw new Error(`electron-builder did not create ${metadata}`);
+  fs.rmSync(destination, { force: true });
+  fs.renameSync(source, destination);
+}
 console.log(`Packaged hvnt33 for ${platform} in apps/desktop/release`);

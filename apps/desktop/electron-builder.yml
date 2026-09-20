@@ -7,6 +7,10 @@ copyright: Copyright © 2026 hvnt33 contributors. Licensed under the GNU AGPL v3
 directories:
   output: release
   buildResources: build-resources
+publish:
+  provider: github
+  owner: kai-ten
+  repo: hvnt33
 files:
   - dist/**
   - package.json
@@ -21,7 +25,8 @@ asarUnpack:
   - "**/node_modules/node-pty/**"
 mac:
   category: public.app-category.productivity
-  target: [dmg]
+  # ZIP is the signed update payload; DMG remains the first-install download.
+  target: [dmg, zip]
   hardenedRuntime: true
   # The Java runtime compiles code at run time (JIT), as V8 does.
   entitlements: build-resources/entitlements.mac.plist

@@ -139,9 +139,14 @@ export const pty = {
 export const onMenu = (fn: (id: string) => void) => listen<string>("menu", fn);
 
 export interface UpdateRelease { version: string; name: string; url: string; publishedAt: string; prerelease: boolean }
-export interface UpdateState { status: "idle" | "checking" | "current" | "available" | "error"; currentVersion: string; release: UpdateRelease | null; message: string }
+export interface UpdateState {
+  status: "idle" | "checking" | "current" | "available" | "downloading" | "downloaded" | "error";
+  currentVersion: string; release: UpdateRelease | null; message: string; progress: number; installable: boolean;
+}
 export const updates = {
   get: () => invoke<UpdateState>("update_get"),
   check: () => invoke<UpdateState>("update_check"),
+  download: () => invoke<UpdateState>("update_download"),
+  install: () => invoke<void>("update_install"),
   onState: (fn: (state: UpdateState) => void) => listen<UpdateState>("update:state", fn),
 };

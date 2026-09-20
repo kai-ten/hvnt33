@@ -115,9 +115,12 @@ jobs:
           name: hvnt33-${{ matrix.os }}
           path: |
             apps/desktop/release/*.dmg
+            apps/desktop/release/*.zip
             apps/desktop/release/*.exe
             apps/desktop/release/*.AppImage
             apps/desktop/release/*.deb
+            apps/desktop/release/*.blockmap
+            apps/desktop/release/latest*.yml
           if-no-files-found: error
       - name: Remove the temporary Apple signing keychain
         if: always() && runner.os == 'macOS'
@@ -137,8 +140,8 @@ jobs:
           merge-multiple: true
       - name: Checksums
         working-directory: installers
-        run: sha256sum *.dmg *.exe *.AppImage *.deb > SHA256SUMS
+        run: sha256sum *.dmg *.zip *.exe *.AppImage *.deb > SHA256SUMS
       - name: Draft release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release create "$GITHUB_REF_NAME" installers/* --repo "$GITHUB_REPOSITORY" --draft --prerelease --title "HVNT33 $GITHUB_REF_NAME" --notes "Signed installers for macOS, Windows and Linux. Verify downloads with SHA256SUMS. Review the CHANGELOG and test every platform before publishing."
+        run: gh release create "$GITHUB_REF_NAME" installers/* --repo "$GITHUB_REPOSITORY" --draft --title "HVNT33 $GITHUB_REF_NAME" --notes "Signed installers for macOS, Windows and Linux. Verify downloads with SHA256SUMS. Review the CHANGELOG and test every platform before publishing."

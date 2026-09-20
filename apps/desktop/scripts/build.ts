@@ -34,7 +34,7 @@ fs.rmSync(path.join(out, "preload"), { recursive: true, force: true });
 const common = { bundle: true, platform: "node" as const, target: "node24", plugins: [raw], logLevel: "warning" as const, legalComments: "none" as const };
 await Promise.all([
   // The main process runs as an ES module; node-pty is a native module, loaded from node_modules.
-  build({ ...common, entryPoints: [path.join(here, "src/main/main.ts")], outfile: path.join(out, "main/main.js"), format: "esm", external: ["electron", "node-pty"],
+  build({ ...common, entryPoints: [path.join(here, "src/main/main.ts")], outfile: path.join(out, "main/main.js"), format: "esm", external: ["electron", "electron-updater", "node-pty"],
     banner: { js: "import { createRequire as __cr } from 'node:module'; const require = __cr(import.meta.url);" } }),
   // Sandboxed preloads are CommonJS with only `electron` available.
   ...["app", "tab"].map(name => build({ ...common, entryPoints: [path.join(here, `src/preload/${name}.ts`)], outfile: path.join(out, `preload/${name}.cjs`), format: "cjs", external: ["electron"] })),

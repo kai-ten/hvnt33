@@ -4,7 +4,7 @@ All notable changes to hvnt33. Dates are when the work was completed.
 
 ## Unreleased: preparing the first public release
 
-- The desktop checks for a newer published version after launch without downloading or installing anything automatically. A persistent notice links to the signed download and release notes, and Help → Check for Updates runs the check on demand.
+- The desktop checks GitHub Releases after launch, downloads a newer signed update in the background, and offers one explicit **Restart and install** action. The agent, server and embedded database shut down cleanly before installation. Help → Check for Updates runs the check on demand.
 - The website Download page reads the latest published GitHub release through a cached same-origin endpoint and shows the version, platform installers, sizes and SHA-256 digests.
 
 - One app on macOS, Windows and Linux, with nothing else to install. The desktop app is rebuilt on Electron: the same interface (now `packages/ui`) and features, one browser engine everywhere. It runs its own server; the server starts a built-in ArcadeDB (26.9.1, on Eclipse Temurin 25, both checksum-verified) instead of Docker. `npm run package` builds an installer with the server, the database and Tor inside. Installed apps keep research in their data folder and set up their own agent workspace.
