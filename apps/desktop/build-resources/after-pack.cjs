@@ -11,7 +11,10 @@ exports.default = async function afterPack(context) {
   const from = path.join(__dirname, "..", "build", "hvnt33", "node_modules");
   const to = path.join(resources, "hvnt33", "node_modules");
   if (!fs.existsSync(from)) throw new Error("The server's dependencies were not staged (run scripts/package.ts)");
-  fs.cpSync(from, to, { recursive: true, dereference: true });
+  // Preserve npm's relative .bin links. Node's dereference mode rewrites them
+  // as absolute paths into the build workspace, which macOS rejects as links
+  // escaping the signed application bundle.
+  fs.cpSync(from, to, { recursive: true, dereference: false, verbatimSymlinks: true });
 
   // Remove Electron runtime capabilities hvnt33 does not use. This happens
   // before signing, so the operating system protects the resulting fuse wire.
