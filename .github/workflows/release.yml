@@ -75,6 +75,41 @@ jobs:
           if [ -z "$CSC_LINK" ]; then unset CSC_LINK CSC_KEY_PASSWORD; fi
           if [ -z "$CSC_LINK" ] && [ -z "$CSC_KEYCHAIN" ]; then export CSC_IDENTITY_AUTO_DISCOVERY=false; fi
           npm run package
+      - name: Sign, notarize and staple the Mac disk image
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -z "$CSC_KEYCHAIN" ]; then
+            echo "The Apple signing keychain was not created." >&2
+            exit 1
+          fi
+          identity="$(security find-identity -v -p codesigning "$CSC_KEYCHAIN" | awk '/Developer ID Application/ { print $2; exit }')"
+          if [ -z "$identity" ]; then
+            echo "No Developer ID Application identity was found." >&2
+            exit 1
+          fi
+          found=false
+          for disk_image in apps/desktop/release/*.dmg; do
+            if [ ! -f "$disk_image" ]; then continue; fi
+            found=true
+            codesign --force --sign "$identity" --timestamp "$disk_image"
+            codesign --verify --verbose=2 "$disk_image"
+            xcrun notarytool submit "$disk_image" \
+              --apple-id "$APPLE_ID" \
+              --password "$APPLE_APP_SPECIFIC_PASSWORD" \
+              --team-id "$APPLE_TEAM_ID" \
+              --wait
+            xcrun stapler staple "$disk_image"
+            xcrun stapler validate "$disk_image"
+          done
+          if [ "$found" != true ]; then
+            echo "No macOS disk image was produced." >&2
+            exit 1
+          fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: hvnt33-${{ matrix.os }}
