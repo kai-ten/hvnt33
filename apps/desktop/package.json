@@ -24,7 +24,7 @@
     "@hvnt33/ui": "*",
     "@types/node": "24.13.5",
     "@vitejs/plugin-react": "6.1.1",
-    "electron": "44.4.3",
+    "electron": "44.9.1",
     "electron-builder": "26.15.3",
     "esbuild": "0.28.2",
     "typescript": "7.0.2",
